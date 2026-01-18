@@ -1,9 +1,10 @@
 package com.javarush.springfinal.model.user;
 
-public class UserResponse {
-    private Long id;
+public record UserResponse (
+    Long id,
 
-    private String name;
+    String name,
 
-    private String email;
+    String email
+    ) {
 }

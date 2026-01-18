@@ -1,14 +1,16 @@
 package com.javarush.springfinal.model.user;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
-public class UserRequest {
-    @Positive
-    private Long id;
-
-    private String name;
-
-    private String email;
-
-    private String password;
+public record UserRequest(
+        @Positive
+        Long id,
+        @NotBlank
+        String name,
+        @NotBlank
+        String email,
+        @NotBlank
+        String password
+) {
 }

@@ -1,5 +1,6 @@
 package com.javarush.springfinal.model.task;
 
+import com.javarush.springfinal.model.TaskStatus;
 import jakarta.validation.constraints.Positive;
 
 public record TaskResponse(
@@ -8,7 +9,7 @@ public record TaskResponse(
         String title,
         String description,
         String deadline,
-        String status,
+        TaskStatus status,
         Long userId
 ) {
 }

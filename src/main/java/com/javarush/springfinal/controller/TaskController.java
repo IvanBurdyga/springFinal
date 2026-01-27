@@ -1,5 +1,8 @@
 package com.javarush.springfinal.controller;
 
+import com.javarush.springfinal.exception.CreateTaskException;
+import com.javarush.springfinal.exception.InvalidUserIdForTasksException;
+import com.javarush.springfinal.exception.UpdateTaskException;
 import com.javarush.springfinal.model.task.TaskRequest;
 import com.javarush.springfinal.model.task.TaskResponse;
 import com.javarush.springfinal.service.TaskService;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 
@@ -28,35 +32,44 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    private TaskResponse readTask(@PathVariable Long id) {
-        return taskService.getTaskById(id);
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    private Collection<TaskResponse> readTasks() {
-        return taskService.getAllTasks();
+    private Collection<TaskResponse> readAllUserTasks(@PathVariable Long userId) {
+        try{
+            return taskService.getAllUserTasks(userId);
+        } catch (InvalidUserIdForTasksException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     private TaskResponse createTask(@Valid @RequestBody TaskRequest taskRequest) {
-        return taskService.createTask(taskRequest);
+        try{
+            return taskService.createTask(taskRequest);
+        } catch (CreateTaskException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
     private TaskResponse updateTask(@Valid @RequestBody TaskRequest taskRequest) {
-        return taskService.updateTask(taskRequest);
+        try {
+            return taskService.updateTask(taskRequest);
+        } catch (UpdateTaskException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    private boolean deleteTask(@PathVariable Long id) {
-        return taskService.deleteUser(id);
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    private void deleteTask(@PathVariable Long id) {
+        boolean result = taskService.deleteUser(id);
+        if (!result){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
+    }
 
 }

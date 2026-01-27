@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html th:lang="${#locale}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration</title>
+</head>
+<body>
+<div id="div_error"></div>
+
+<div th:if="${param.error}">
+    Invalid username and password.
+</div>
+<form name="register_form">
+    <fieldset>
+
+        <legend>Please fill the registration form</legend>
+
+        <div>
+            <label for="name"> User Name : </label>
+            <div>
+                <input id="name" type="text" name="name">
+            </div>
+        </div>
+
+        <div>
+            <label for="email"> Email: </label>
+            <div>
+                <input id="email" type="email" name="email">
+            </div>
+        </div>
+
+        <div>
+            <label for="password"> Password: </label>
+            <div>
+                <input id="password" type="password" name="password">
+            </div>
+        </div>
+
+        <div>
+            <br>
+            <button name="createUser" type="submit" value="Register">Register</button>
+        </div>
+
+    </fieldset>
+</form>
+
+
+<script>
+    document.register_form.onsubmit = async (e) => {
+        e.preventDefault();
+        let object = {};
+        new FormData(document.register_form).forEach((value, key) => object[key] = value);
+        let json = JSON.stringify(object)
+
+        fetch(`/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: json
+        })
+            .then(response => {
+                if (response.status === 201) {
+                    return response.json()
+                } else {
+                   return location.replace('/register?error')
+                }
+            })
+            .then(result => {
+                location.replace(`/user_page?user_id=${result.id}`);
+            });
+    }
+</script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package com.javarush.springfinal.controller;
 
-import com.javarush.springfinal.exception.CreateUserException;
 import com.javarush.springfinal.exception.UpdateUserException;
 import com.javarush.springfinal.exception.UserNotFoundException;
 import com.javarush.springfinal.model.user.UserRequest;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,21 +35,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable Long id) {
+    public UserResponse getUser(@PathVariable String id) {
         try {
             return userService.getUserById(id);
         } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    private UserResponse createUser(@RequestBody UserRequest userRequest) {
-        try {
-            return userService.createUser(userRequest);
-        } catch (CreateUserException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
 

@@ -32,9 +32,9 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserResponse getUserById(Long id) {
+    public UserResponse getUserById(String name) {
         return userRepository
-                .getById(id)
+                .findByName(name)
                 .map(userMapper::toUserResponse)
                 .orElseThrow();
     }

@@ -14,10 +14,6 @@ public interface RepositoryInterface<T, ID> extends CrudRepository<T, ID> {
         return StreamSupport.stream(findAll().spliterator(), false);
     }
 
-    default Optional<T> getById(ID id) {
-        return findById(id);
-    }
-
     default Optional<T> create(T input) {
         T saved = save(input);
         return Optional.of(saved);

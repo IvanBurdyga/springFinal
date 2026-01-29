@@ -4,7 +4,7 @@ import com.javarush.springfinal.model.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
-public record TaskRequest(
+public record TaskRequest (
         @Positive
         Long id,
         @NotBlank
@@ -13,9 +13,9 @@ public record TaskRequest(
         String description,
         @NotBlank
         String deadline,
-//        @NotBlank
+        @NotBlank
         TaskStatus status,
         @Positive
-//        @NotBlank
+        @NotBlank
         Long userId) {
 }

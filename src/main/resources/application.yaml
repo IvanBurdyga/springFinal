@@ -14,3 +14,7 @@ spring:
   session:
     jdbc:
       initialize-schema: always
+
+my-jwt:
+  config:
+    secret: flk43r423ja090dfaSJ0asdf23Dad3faf2af113432ew4324rfSF434DFErw3424234ra3ra3eaw

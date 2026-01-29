@@ -11,7 +11,7 @@
     <div th:if="${param.logout}">
         You have been logged out.
     </div>
-    <form th:action="@{/login}" method="post">
+    <form name="login_form" method="post">
         <fieldset>
 
             <legend>Login</legend>
@@ -37,6 +37,33 @@
 
         </fieldset>
     </form>
+
+    <script>
+        document.login_form.onsubmit = async (e) => {
+            e.preventDefault();
+            let object = {};
+            new FormData(document.login_form).forEach((value, key) => object[key] = value);
+            let json = JSON.stringify(object)
+
+            fetch(`/token/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                },
+                body: json
+            })
+               .then(response => {
+                    if (response.status === 202) {
+                       return response.json();
+                    } else {
+                        return location.replace('/login?error');
+                    }
+               })
+                .then(result => {
+                    location.replace(`/user_page?token=${result.token}`)
+                });
+        }
+    </script>
 </div>
 </body>
 </html>

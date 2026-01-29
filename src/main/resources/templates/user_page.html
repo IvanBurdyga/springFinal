@@ -72,22 +72,30 @@
 </form>
 
 
-
 <script>
     const divUsername = document.getElementById('div_username');
     const divEmail = document.getElementById('div_email');
-    const userId = new URLSearchParams(document.location.search).get('user_id');
-    fetch(`/users/${userId}`)
+    const token = new URLSearchParams(document.location.search).get('token');
+    const requestToken = 'Bearer ' + token;
+    const tokenParts = token.split('.');
+    let userId;
+
+    fetch(`/users/${JSON.parse(atob(tokenParts[1])).name}`, {
+        headers: {
+            'Authorization': requestToken
+        }
+    })
         .then(response => {
             if (response.status === 200) {
                 return response.json()
             } else {
-                //  return logout();
+                return logout();
             }
 
         })
         .then(result => {
             fillData(result.name, result.email);
+            userId = result.id;
         });
 
     document.user_form.onsubmit = async (e) => {
@@ -101,7 +109,8 @@
         fetch(`/users`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json;charset=utf-8'
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': requestToken
             },
             body: json
         })
@@ -121,14 +130,17 @@
         .addEventListener('click', () => deleteFunction())
 
     document.getElementById('tasks_button')
-        .addEventListener('click', () => location.href = `/tasks?user_id=${userId}`)
+        .addEventListener('click', () => location.href = `/tasks?user_id=${userId}&token=${token}`)
 
     document.getElementById('logout_button')
         .addEventListener('click', () => logout())
 
     function deleteFunction() {
         fetch(`/users/${userId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': requestToken
+            }
         })
             .then(response => {
                 if (response.status === 204) {
@@ -146,7 +158,7 @@
         divEmail.innerText = text2;
     }
 
-    function logout(){
+    function logout() {
         return location.href = '/logout';
     }
 </script>

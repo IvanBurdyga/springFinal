@@ -12,18 +12,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class AuthService implements UserDetailsService {
+public class AuthenticateService implements UserDetailsService {
 
     private final UserRepository userRepository;
+
 
     @NullMarked
     @NonNull
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var userInDb = userRepository.findByName(username);
-        if (userInDb == null) {
-            throw new UsernameNotFoundException(username);
-        }
+        var userInDb = userRepository.findByName(username).orElseThrow();
         return User.withUsername(userInDb.getName())
                 .password(userInDb.getPassword())
                 .roles(userInDb.getRole().getRole())

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: spring-final
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/spring_db
+    username: postgres
+    password: postgres
+
+  liquibase:
+    change-log: classpath:/db/changelog/changelog-master.xml
+
+  session:
+    jdbc:
+      initialize-schema: always
+
+my-jwt:
+  config:
+    secret: flk43r423ja090dfaSJ0asdf23Dad3faf2af113432ew4324rfSF434DFErw3424234ra3ra3eaw

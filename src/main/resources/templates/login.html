@@ -1,0 +1,69 @@
+<!doctype html>
+<html th:lang="${#locale}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<div>
+    <div th:if="${param.error}">
+        Invalid username or password.
+    </div>
+    <div th:if="${param.logout}">
+        You have been logged out.
+    </div>
+    <form name="login_form" method="post">
+        <fieldset>
+
+            <legend>Login</legend>
+
+            <div>
+                <label for="name">Username</label>
+                <div>
+                    <input id="name" name="name">
+                </div>
+            </div>
+
+            <div>
+                <label for="password">Password</label>
+                <div>
+                    <input id="password" name="password" type="password">
+                </div>
+            </div>
+
+            <div>
+                <br>
+                <button type="submit" id="loginUser" name="loginUser">Login</button>
+            </div>
+
+        </fieldset>
+    </form>
+
+    <script>
+        document.login_form.onsubmit = async (e) => {
+            e.preventDefault();
+            let object = {};
+            new FormData(document.login_form).forEach((value, key) => object[key] = value);
+            let json = JSON.stringify(object)
+
+            fetch(`/token/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                },
+                body: json
+            })
+               .then(response => {
+                    if (response.status === 202) {
+                       return response.json();
+                    } else {
+                        return location.replace('/login?error');
+                    }
+               })
+                .then(result => {
+                    location.replace(`/user_page?token=${result.token}`)
+                });
+        }
+    </script>
+</div>
+</body>
+</html>

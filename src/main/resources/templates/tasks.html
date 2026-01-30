@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table, td, th {
+            border: 1px solid black;
+        }
+
+        table tbody tr {
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+
+        table tbody tr:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+    </style>
+    <title>Tasks</title>
+</head>
+<body>
+
+<fieldset>
+    <legend>Tasks</legend>
+
+    <table>
+        <thead>
+        <tr>
+            <td>Title</td>
+            <td>Description</td>
+            <td>Deadline</td>
+            <td>Status</td>
+        </tr>
+        </thead>
+        <tbody id="tasks_area"></tbody>
+    </table>
+    <br>
+</fieldset>
+<br>
+
+
+    <fieldset>
+
+        <legend>Edit tasks</legend>
+        <form name="task_form" id="task_form">
+        <div>
+            <label for="title">Title:</label>
+            <div>
+                <input id="title" name="title" type="text">
+            </div>
+        </div>
+
+        <div>
+            <label for="description">Description:</label>
+            <div>
+                <input id="description" name="description" type="text">
+            </div>
+        </div>
+
+        <div>
+            <label for="deadline">Deadline:</label>
+            <div>
+                <input id="deadline" name="deadline" type="date">
+            </div>
+        </div>
+
+        <div>
+            <label for="status">Status:</label>
+            <div>
+                <select id="status" name="status">
+                    <option value="IN_PROGRESS">IN PROGRESS</option>
+                    <option value="DONE">DONE</option>
+                </select>
+            </div>
+        </div>
+        <br>
+
+        <div>
+            <span>
+                <input id="send_form_button" name="send_form_button" type="submit" value="Send">
+            </span>
+
+            <span>
+                <input id="delete_task_button" name="delete_task_button" type="button" value="Delete">
+            </span>
+
+            <span>
+                <input id="reset_button" name="reset_button" type="reset" value="Reset">
+            </span>
+
+            <span>
+                <input id="user_page_button" name="user_page_button" type="button" value="User settings">
+            </span>
+        </div>
+        </form>
+    </fieldset>
+
+
+<script>
+    const userId = new URLSearchParams(document.location.search).get('user_id');
+    const table = document.getElementById('tasks_area');
+    const token = new URLSearchParams(document.location.search).get('token');
+    const requestToken = 'Bearer ' + token;
+    let currentTaskId = null;
+    fetch(`/task/${userId}`, {
+        headers: {
+            'Authorization': requestToken
+        }
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else {
+                return alert('no tasks');
+            }
+        })
+        .then(result => result
+            .forEach(object => addRow(object)));
+
+    document.getElementById('delete_task_button')
+        .addEventListener('click', () => deleteTask());
+
+    document.getElementById("user_page_button")
+        .addEventListener('click', () => location.href = `/user_page?token=${token}`);
+
+    document.getElementById('reset_button')
+        .addEventListener('click', () => currentTaskId = null);
+
+    document.task_form.onsubmit = async (e) => {
+        e.preventDefault();
+        let object = {};
+        let formData = new FormData(document.task_form);
+        formData.append('id', currentTaskId);
+        formData.append('userId', userId);
+        formData.forEach((value, key) => object[key] = value);
+        let json = JSON.stringify(object);
+        let method;
+        if (currentTaskId === null) {
+            method = 'POST';
+        } else {
+            method = 'PUT';
+        }
+        fetch(`/task`, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': requestToken
+            },
+            body: json
+        })
+            .then(response => {
+                if (response.status === 200 || response.status === 201) {
+                    return response.json();
+                } else {
+                    return alert('form must not be void');
+                }
+            })
+            .then(result => {
+                if (method === 'POST') {
+                    addRow(result);
+                }
+                if (method === 'PUT') {
+                    refreshTable(result);
+                }
+                document.task_form.reset();
+                currentTaskId = null;
+            });
+    }
+
+    function refreshTable(object) {
+        const row = document.getElementById(object.id);
+        row.remove();
+        addRow(object);
+    }
+
+    function addRow(object) {
+        const row = table.insertRow();
+        row.id = object.id;
+        row.insertCell().innerText = object.title;
+        row.insertCell().innerText = object.description;
+        row.insertCell().innerText = object.deadline;
+        row.insertCell().innerText = object.status;
+        row.addEventListener('click', () => selectFromTable(object));
+        row.title = "click to select";
+
+    }
+
+    function selectFromTable(object) {
+        const form = document.getElementById('task_form');
+        form.title.value = object.title;
+        form.description.value = object.description;
+        form.deadline.value = object.deadline;
+        form.status.value = object.status;
+        currentTaskId = object.id;
+    }
+
+    function deleteTask() {
+        fetch(`/task/${currentTaskId}`, {
+            method: 'DELETE',
+            headers :{
+                'Authorization': requestToken
+            }
+        })
+            .then(response => {
+                if (response.status === 204) {
+                    document.getElementById(currentTaskId)
+                        .remove();
+                    currentTaskId = null;
+                    document.task_form.reset();
+                }
+            });
+    }
+</script>
+</body>
+</html>

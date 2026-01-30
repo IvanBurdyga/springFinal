@@ -83,8 +83,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
+            <version>1.18.42</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
@@ -140,6 +140,7 @@
                         <path>
                             <groupId>org.projectLombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
                         </path>
                         <path>
                             <groupId>org.mapstruct</groupId>

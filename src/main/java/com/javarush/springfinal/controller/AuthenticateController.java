@@ -1,7 +1,7 @@
 package com.javarush.springfinal.controller;
 
-import com.javarush.springfinal.config.jwt.model.JwtTokenRequest;
-import com.javarush.springfinal.config.jwt.model.JwtTokenResponse;
+import com.javarush.springfinal.config.dto.JwtTokenRequest;
+import com.javarush.springfinal.config.dto.JwtTokenResponse;
 import com.javarush.springfinal.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

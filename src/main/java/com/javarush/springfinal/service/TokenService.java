@@ -1,8 +1,8 @@
 package com.javarush.springfinal.service;
 
 import com.javarush.springfinal.config.jwt.JwtTokenHelper;
-import com.javarush.springfinal.config.jwt.model.JwtTokenRequest;
-import com.javarush.springfinal.config.jwt.model.JwtTokenResponse;
+import com.javarush.springfinal.config.dto.JwtTokenRequest;
+import com.javarush.springfinal.config.dto.JwtTokenResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

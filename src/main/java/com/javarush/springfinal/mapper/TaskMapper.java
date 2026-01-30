@@ -1,8 +1,8 @@
 package com.javarush.springfinal.mapper;
 
 import com.javarush.springfinal.model.task.Task;
-import com.javarush.springfinal.model.task.TaskRequest;
-import com.javarush.springfinal.model.task.TaskResponse;
+import com.javarush.springfinal.config.dto.TaskRequest;
+import com.javarush.springfinal.config.dto.TaskResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;

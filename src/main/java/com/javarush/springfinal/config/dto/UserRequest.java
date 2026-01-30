@@ -1,4 +1,4 @@
-package com.javarush.springfinal.model.user;
+package com.javarush.springfinal.config.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;

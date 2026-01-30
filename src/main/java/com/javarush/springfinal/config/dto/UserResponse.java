@@ -1,4 +1,4 @@
-package com.javarush.springfinal.model.user;
+package com.javarush.springfinal.config.dto;
 
 public record UserResponse (
     Long id,

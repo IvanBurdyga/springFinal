@@ -1,8 +1,8 @@
 package com.javarush.springfinal.mapper;
 
 import com.javarush.springfinal.model.user.User;
-import com.javarush.springfinal.model.user.UserRequest;
-import com.javarush.springfinal.model.user.UserResponse;
+import com.javarush.springfinal.config.dto.UserRequest;
+import com.javarush.springfinal.config.dto.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 

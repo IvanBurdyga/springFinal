@@ -1,4 +1,4 @@
-package com.javarush.springfinal.model.task;
+package com.javarush.springfinal.config.dto;
 
 import com.javarush.springfinal.model.TaskStatus;
 import jakarta.validation.constraints.Positive;

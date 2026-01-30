@@ -2,8 +2,8 @@ package com.javarush.springfinal.controller;
 
 import com.javarush.springfinal.exception.UpdateUserException;
 import com.javarush.springfinal.exception.UserNotFoundException;
-import com.javarush.springfinal.model.user.UserRequest;
-import com.javarush.springfinal.model.user.UserResponse;
+import com.javarush.springfinal.config.dto.UserRequest;
+import com.javarush.springfinal.config.dto.UserResponse;
 import com.javarush.springfinal.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

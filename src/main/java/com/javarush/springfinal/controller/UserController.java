@@ -34,10 +34,10 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable String id) {
+    @GetMapping("/{name}")
+    public UserResponse getUser(@PathVariable String name) {
         try {
-            return userService.getUserById(id);
+            return userService.getUserByName(name);
         } catch (UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

@@ -1,7 +1,7 @@
 package com.javarush.springfinal.service;
 
 import com.javarush.springfinal.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.User;
@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthenticateService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -21,7 +21,7 @@ public class AuthenticateService implements UserDetailsService {
     @NonNull
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var userInDb = userRepository.findByName(username).orElseThrow();
+        var userInDb = userRepository.getUserByName(username).orElseThrow();
         return User.withUsername(userInDb.getName())
                 .password(userInDb.getPassword())
                 .roles(userInDb.getRole().getRole())

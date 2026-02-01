@@ -7,7 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @Component
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtTokenHelper jwtTokenHelper;

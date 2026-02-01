@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html th:lang="${#locale}" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Settings</title>
+</head>
+<body>
+<fieldset>
+    <legend>User</legend>
+
+    <table>
+
+        <tr>
+            <td>Username:</td>
+            <td>
+                <div id="div_username"></div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Email:</td>
+            <td>
+                <div id="div_email"></div>
+            </td>
+        </tr>
+
+    </table>
+</fieldset>
+
+<form name="user_form" id="user_form">
+    <fieldset>
+
+        <legend>Edit user</legend>
+
+        <div>
+            <label for="name">New username:</label>
+            <div>
+                <input id="name" type="text" name="name">
+            </div>
+        </div>
+
+        <div>
+            <label for="email">New email:</label>
+            <div>
+                <input id="email" type="email" name="email">
+            </div>
+        </div>
+
+        <div>
+            <label for="password">New password:</label>
+            <div>
+                <input id="password" type="password" name="password">
+            </div>
+        </div>
+        <br>
+
+        <div>
+            <span>
+                <input id="update" name="update" type="submit" value="Update">
+            </span>
+            <span>
+                 <input id="delete_button" name="delete_button" type="button" value="Delete">
+            </span>
+            <span>
+                 <input id="tasks_button" name="tasks_button" type="button" value="Tasks">
+            </span>
+            <span>
+                <input id="logout_button" name="logout_button" type="button" value="Logout"/>
+            </span>
+        </div>
+
+    </fieldset>
+</form>
+
+
+<script>
+    const divUsername = document.getElementById('div_username');
+    const divEmail = document.getElementById('div_email');
+    const token = new URLSearchParams(document.location.search).get('token');
+    const requestToken = 'Bearer ' + token;
+    const tokenParts = token.split('.');
+    let userId;
+
+    fetch(`/users/${JSON.parse(atob(tokenParts[1])).name}`, {
+        headers: {
+            'Authorization': requestToken
+        }
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else {
+                return logout();
+            }
+
+        })
+        .then(result => {
+            fillData(result.name, result.email);
+            userId = result.id;
+        });
+
+    document.user_form.onsubmit = async (e) => {
+        e.preventDefault();
+        let object = {};
+        let formData = new FormData(document.user_form);
+        formData.append('id', userId);
+        formData.forEach((value, key) => object[key] = value);
+        let json = JSON.stringify(object)
+
+        fetch(`/users`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': requestToken
+            },
+            body: json
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json()
+                } else {
+                    alert('invalid email or name')
+                }
+            })
+            .then(result => {
+                fillData(result.name, result.email);
+            });
+    };
+
+    document.getElementById('delete_button')
+        .addEventListener('click', () => deleteFunction())
+
+    document.getElementById('tasks_button')
+        .addEventListener('click', () => location.href = `/tasks?user_id=${userId}&token=${token}`)
+
+    document.getElementById('logout_button')
+        .addEventListener('click', () => logout())
+
+    function deleteFunction() {
+        fetch(`/users/${userId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': requestToken
+            }
+        })
+            .then(response => {
+                if (response.status === 204) {
+                    alert('User has been deleted');
+                } else {
+                    alert('User not found');
+                }
+                return logout();
+            });
+
+    }
+
+    function fillData(text1, text2) {
+        divUsername.innerText = text1;
+        divEmail.innerText = text2;
+    }
+
+    function logout() {
+        return location.href = '/logout';
+    }
+</script>
+</body>
+</html>
